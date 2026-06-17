@@ -1,0 +1,24 @@
+{
+  "name": "branchpanda",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build && vite build --config vite.config.content.ts",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "motion": "^12.40.0",
+    "preact": "^10.29.2",
+    "prismjs": "^1.30.0"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.10.5",
+    "@tailwindcss/vite": "^4.3.1",
+    "@types/node": "^25.9.3",
+    "tailwindcss": "^4.3.1",
+    "typescript": "~6.0.3",
+    "vite": "^8.0.16"
+  }
+}

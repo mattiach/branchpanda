@@ -1,0 +1,67 @@
+/* Prism theme aligned with shadcn design tokens */
+.code-highlight .token.comment,
+.code-highlight .token.prolog,
+.code-highlight .token.doctype,
+.code-highlight .token.cdata {
+  color: var(--muted-foreground);
+  font-style: italic;
+}
+
+.code-highlight .token.punctuation {
+  color: var(--foreground);
+  opacity: 0.75;
+}
+
+.code-highlight .token.property,
+.code-highlight .token.tag,
+.code-highlight .token.boolean,
+.code-highlight .token.number,
+.code-highlight .token.constant,
+.code-highlight .token.symbol,
+.code-highlight .token.deleted {
+  color: var(--chart-3);
+}
+
+.code-highlight .token.selector,
+.code-highlight .token.attr-name,
+.code-highlight .token.string,
+.code-highlight .token.char,
+.code-highlight .token.builtin,
+.code-highlight .token.inserted {
+  color: var(--chart-2);
+}
+
+.code-highlight .token.operator,
+.code-highlight .token.entity,
+.code-highlight .token.url,
+.code-highlight .language-css .token.string,
+.code-highlight .style .token.string {
+  color: var(--foreground);
+  opacity: 0.85;
+}
+
+.code-highlight .token.atrule,
+.code-highlight .token.attr-value,
+.code-highlight .token.keyword {
+  color: var(--primary);
+}
+
+.code-highlight .token.function,
+.code-highlight .token.class-name {
+  color: var(--chart-4);
+}
+
+.code-highlight .token.regex,
+.code-highlight .token.important,
+.code-highlight .token.variable {
+  color: var(--chart-5);
+}
+
+.code-highlight .token.important,
+.code-highlight .token.bold {
+  font-weight: bold;
+}
+
+.code-highlight .token.italic {
+  font-style: italic;
+}
