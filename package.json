@@ -5,8 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build && vite build --config vite.config.content.ts",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build": "tsc --noEmit && vite build && vite build --config vite.config.content.ts",
+    "build:chrome": "pnpm build && node scripts/copy-manifest.js chrome",
+    "build:firefox": "pnpm build && node scripts/copy-manifest.js firefox"
   },
   "dependencies": {
     "motion": "^12.40.0",
