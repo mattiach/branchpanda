@@ -3,6 +3,11 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "author": {
+    "name": "mattiach",
+    "email": "mattiach.developer@gmail.com",
+    "url": "https://www.linkedin.com/in/mattiach/"
+  },
   "scripts": {
     "dev": "vite",
     "preview": "vite preview",

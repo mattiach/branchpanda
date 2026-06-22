@@ -1,4 +1,4 @@
-<img width="100%" src="./preview/banner.png" style="margin-bottom: 10px" alt="BranchPanda banner" />
+<img width="100%" src="./preview/banner.png" alt="BranchPanda banner" />
 
 _BranchPanda is an IDE-like browser extension that improves GitHub repository navigation, allowing fast exploration of the current repo or switching to another one directly from a built-in interface._
 
@@ -6,9 +6,9 @@ _BranchPanda is an IDE-like browser extension that improves GitHub repository na
 
 The extension runs inside public GitHub repositories. Clicking the **“BranchPanda”** button in the repository header opens an IDE-like navigation panel.
 
-<img width="100%" src="./preview/button-preview.png" style="margin-bottom: 10px" alt="BranchPanda banner" />
+<img width="100%" src="./preview/button-preview.png" alt="Button preview" />
 
-<img width="100%" src="./preview/navigation-preview.png" style="margin-bottom: 10px" alt="BranchPanda banner" />
+<img width="100%" src="./preview/navigation-preview.png" style="margin-bottom: 10px" alt="Navigation preview" />
 
 From there you can:
 
