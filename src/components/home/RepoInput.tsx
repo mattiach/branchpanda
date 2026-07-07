@@ -1,6 +1,7 @@
 import { useState } from 'preact/hooks';
 import { useRepository } from '../../hooks/useRepository';
 import { useAppStore } from '../../store/app.store';
+import { getRecentRepos } from '../../services/cache.service';
 import { LoadingSpinner } from '../ui/LoadingSpinner';
 import { ErrorBanner } from '../ui/ErrorBanner';
 import { Icon } from '../ui/Icon';
@@ -27,6 +28,7 @@ export function RepoInput({ suggestedRepo }: Props) {
   const { state, dispatch } = useAppStore();
   const { loadRepo, isLoading } = useRepository();
   const [input, setInput] = useState(() => suggestedRepo ?? '');
+  const [recentRepos] = useState(() => getRecentRepos());
   const { reduced } = useMotionTransition();
 
   async function handleSubmit(e: Event) {
@@ -40,7 +42,7 @@ export function RepoInput({ suggestedRepo }: Props) {
   }
 
   return (
-    <Stagger className="flex flex-col items-center gap-6 w-full max-w-md px-4" variants={staggerContainer}>
+    <Stagger className="flex flex-col items-center gap-6 w-full max-w-md px-4 overflow-x-hidden" variants={staggerContainer}>
       <StaggerItem className="text-center select-none">
         <motion.div
           initial={motionInitial(reduced, { opacity: 0, scale: 0.92 })}
@@ -73,6 +75,36 @@ export function RepoInput({ suggestedRepo }: Props) {
           </Pressable>
         </form>
       </StaggerItem>
+
+      {recentRepos.length > 0 && (
+        <StaggerItem className="flex flex-col items-center gap-2 w-full min-w-0 overflow-hidden">
+          <span class="text-xs text-muted-foreground select-none">Recent</span>
+
+          <div class="flex flex-col gap-1.5 w-full min-w-0 max-h-40 overflow-y-auto overflow-x-hidden">
+            {recentRepos.map(entry => (
+              <Pressable
+                key={entry.full_name}
+                type="button"
+                motion="none"
+                onClick={() => void loadRepo(entry.owner, entry.name)}
+                disabled={isLoading}
+                className="flex items-center gap-2 w-full min-w-0 rounded-lg border border-border bg-muted/50 px-3 py-2 text-xs text-muted-foreground hover:border-ring/50 hover:text-foreground transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <span class="truncate min-w-0 flex-1 text-left">
+                  <span class="text-muted-foreground">{entry.owner}</span>
+                  <span class="text-muted-foreground/50">/</span>
+                  <span class="font-medium text-foreground">{entry.name}</span>
+                </span>
+                {entry.language && (
+                  <span class="shrink-0 max-w-24 truncate rounded-full border border-border bg-muted px-2 py-0.5 text-[10px] leading-none">
+                    {entry.language}
+                  </span>
+                )}
+              </Pressable>
+            ))}
+          </div>
+        </StaggerItem>
+      )}
 
       <StaggerItem className="flex flex-col items-center gap-2 w-full">
         <span class="text-xs text-muted-foreground select-none">Try an example</span>
