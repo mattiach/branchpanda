@@ -12,6 +12,7 @@
     "dev": "vite",
     "preview": "vite preview",
     "build": "tsc --noEmit && vite build && vite build --config vite.config.content.ts",
+    "version:manifests": "node scripts/update-manifest-version.js",
     "build:chrome": "pnpm build && node scripts/copy-manifest.js chrome",
     "build:firefox": "pnpm build && node scripts/copy-manifest.js firefox"
   },
