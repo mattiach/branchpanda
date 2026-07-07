@@ -34,14 +34,14 @@ function AppContent() {
   const { reduced } = useMotionTransition();
 
   return (
-    <div class="flex flex-col h-screen bg-background text-foreground overflow-hidden">
+    <div class="flex flex-col h-full min-h-0 bg-background text-foreground overflow-hidden">
       <AutoLoader />
       <Header />
       <Presence mode="wait">
         {state.view === 'home' ? (
           <motion.div
             key="home"
-            className="flex flex-1 min-h-0 overflow-hidden"
+            className="flex flex-1 min-h-0 h-full w-full overflow-hidden"
             variants={page}
             initial={motionInitial(reduced, 'initial')}
             animate="animate"
@@ -52,7 +52,7 @@ function AppContent() {
         ) : (
           <motion.div
             key="explorer"
-            className="flex flex-1 min-h-0 overflow-hidden"
+            className="flex flex-1 min-h-0 h-full w-full overflow-hidden"
             variants={page}
             initial={motionInitial(reduced, 'initial')}
             animate="animate"
