@@ -1,9 +1,19 @@
 import { useState } from 'preact/hooks';
 import { fetchRepo } from '../services/github.service';
-import { cacheGet, cacheSet } from '../services/cache.service';
+import { cacheGet, cacheSet, getRepoBranch, pushRecentRepo } from '../services/cache.service';
 import { useAppStore } from '../store/app.store';
 
 import type { GitHubRepo } from '../types/github.types';
+
+function resolveBranch(repo: GitHubRepo): string {
+  return getRepoBranch(repo.full_name) ?? repo.default_branch;
+}
+
+function openRepo(repo: GitHubRepo, dispatch: ReturnType<typeof useAppStore>['dispatch']): void {
+  const branch = resolveBranch(repo);
+  pushRecentRepo(repo);
+  dispatch({ type: 'SET_REPO', payload: { repo, branch } });
+}
 
 export function useRepository() {
   const { dispatch } = useAppStore();
@@ -14,7 +24,7 @@ export function useRepository() {
     const cached = cacheGet<GitHubRepo>(ck);
 
     if (cached) {
-      dispatch({ type: 'SET_REPO', payload: cached });
+      openRepo(cached, dispatch);
       return;
     }
 
@@ -24,7 +34,7 @@ export function useRepository() {
     try {
       const data = await fetchRepo(owner, repo);
       cacheSet(ck, data);
-      dispatch({ type: 'SET_REPO', payload: data });
+      openRepo(data, dispatch);
     } catch (err) {
       dispatch({
         type: 'SET_ERROR',

@@ -22,12 +22,13 @@ export function useFileViewer() {
     }
 
     const { owner: { login: owner }, name: repoName, default_branch: ref } = state.repo;
+    const branch = state.currentBranch || ref;
 
     dispatch({ type: 'SET_LOADING_FILE', payload: true });
     dispatch({ type: 'SET_ERROR', payload: null });
 
     try {
-      const file = await loadFileContent(owner, repoName, path, ref, meta);
+      const file = await loadFileContent(owner, repoName, path, branch, meta);
       dispatch({ type: 'SET_SELECTED_FILE', payload: file });
     } catch (err) {
       dispatch({
@@ -37,7 +38,7 @@ export function useFileViewer() {
     } finally {
       dispatch({ type: 'SET_LOADING_FILE', payload: false });
     }
-  }, [state.repo, dispatch, findPath, isReady]);
+  }, [state.repo, state.currentBranch, dispatch, findPath, isReady]);
 
   const closeFile = useCallback(() => {
     dispatch({ type: 'SET_SELECTED_FILE', payload: null });
