@@ -56,6 +56,19 @@ export async function fetchBranch(
   return handleResponse<GitHubBranch>(res);
 }
 
+interface GitHubBranchListItem {
+  name: string;
+}
+
+export async function fetchBranches(owner: string, repo: string): Promise<string[]> {
+  const res = await fetch(
+    `${BASE_URL}/repos/${owner}/${repo}/branches?per_page=100`,
+    { headers: headers() },
+  );
+  const data = await handleResponse<GitHubBranchListItem[]>(res);
+  return data.map(b => b.name);
+}
+
 export async function fetchFullTree(
   owner: string,
   repo: string,

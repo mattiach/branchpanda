@@ -79,6 +79,61 @@ export function loadNavState(fullName: string): string {
   return localStorage.getItem(`${PREFIX}nav_${fullName}`) ?? '';
 }
 
+export function getRepoBranch(fullName: string): string | null {
+  return prefGet(`branch_${fullName}`);
+}
+
+export function saveRepoBranch(fullName: string, branch: string): void {
+  prefSet(`branch_${fullName}`, branch);
+}
+
+export interface RecentRepoEntry {
+  full_name: string;
+  owner: string;
+  name: string;
+  language: string | null;
+  html_url: string;
+}
+
+const RECENT_REPOS_KEY = 'recent_repos';
+const MAX_RECENT_REPOS = 10;
+
+export function getRecentRepos(): RecentRepoEntry[] {
+  try {
+    const raw = localStorage.getItem(prefKey(RECENT_REPOS_KEY));
+    if (!raw) return [];
+    const parsed = JSON.parse(raw) as RecentRepoEntry[];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+export function pushRecentRepo(repo: {
+  full_name: string;
+  owner: { login: string };
+  name: string;
+  language: string | null;
+  html_url: string;
+}): void {
+  try {
+    const entry: RecentRepoEntry = {
+      full_name: repo.full_name,
+      owner: repo.owner.login,
+      name: repo.name,
+      language: repo.language,
+      html_url: repo.html_url,
+    };
+    const next = [
+      entry,
+      ...getRecentRepos().filter(r => r.full_name !== repo.full_name),
+    ].slice(0, MAX_RECENT_REPOS);
+    localStorage.setItem(prefKey(RECENT_REPOS_KEY), JSON.stringify(next));
+  } catch (error) {
+    console.error('pushRecentRepo:', error);
+  }
+}
+
 /** User preference keys (stored without TTL, prefixed with PREFIX). */
 export const PREF = {
   TREE_SIDEBAR_WIDTH: 'tree_sidebar_width',
