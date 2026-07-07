@@ -30,6 +30,8 @@ export function TreeView() {
     return <EmptyState icon="tree" title="No files found" />;
   }
 
+  const highlightPath = state.selectedFile?.path ?? state.currentPath;
+
   return (
     <div class="py-1">
       {truncated && (
@@ -44,6 +46,7 @@ export function TreeView() {
           onToggle={toggleNode}
           onFileClick={handleFileClick}
           selectedPath={state.selectedFile?.path}
+          highlightPath={highlightPath}
         />
       ))}
     </div>

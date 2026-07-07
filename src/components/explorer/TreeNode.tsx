@@ -8,6 +8,7 @@ interface Props {
   onToggle: (node: TreeNodeData) => void;
   onFileClick: (node: TreeNodeData) => void;
   selectedPath?: string;
+  highlightPath?: string;
   level?: number;
 }
 
@@ -22,8 +23,12 @@ const rowClass = (selected: boolean, file = false) =>
         : 'text-sidebar-foreground hover:bg-sidebar-accent/30'
   }`;
 
-export function TreeNode({ node, onToggle, onFileClick, selectedPath, level = 0 }: Props) {
+export function TreeNode({ node, onToggle, onFileClick, selectedPath, highlightPath, level = 0 }: Props) {
   const isSelected = selectedPath === node.path;
+  const isHighlighted =
+    !selectedPath &&
+    node.type === 'dir' &&
+    highlightPath === node.path;
   const indent = level * 12 + 8;
 
   if (node.type === 'dir') {
@@ -33,7 +38,7 @@ export function TreeNode({ node, onToggle, onFileClick, selectedPath, level = 0 
           type="button"
           onClick={() => onToggle(node)}
           style={{ paddingLeft: `${indent}px` }}
-          class={rowClass(isSelected)}
+          class={rowClass(isSelected || isHighlighted)}
           title={node.path}
         >
           <span class="shrink-0 w-3 text-[9px] text-muted-foreground text-center">
@@ -59,6 +64,7 @@ export function TreeNode({ node, onToggle, onFileClick, selectedPath, level = 0 
                 onToggle={onToggle}
                 onFileClick={onFileClick}
                 selectedPath={selectedPath}
+                highlightPath={highlightPath}
                 level={level + 1}
               />
             ))
