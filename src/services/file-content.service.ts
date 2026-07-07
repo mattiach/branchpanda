@@ -1,5 +1,5 @@
 import { cacheGet, cacheSet } from './cache.service';
-import { encodeBase64Content, decodeBase64Content, isTextFile } from '../utils/file.utils';
+import { encodeBase64Content, decodeBase64Content, isTextFile, isRasterImageFile } from '../utils/file.utils';
 import type { GitHubFileContent } from '../types/github.types';
 
 const RAW_BASE = 'https://raw.githubusercontent.com';
@@ -98,6 +98,11 @@ export async function loadFileContent(
   if (cached) return cached;
 
   const name = path.split('/').pop() ?? path;
+  if (isRasterImageFile(name)) {
+    const placeholder = buildBinaryPlaceholder(owner, repo, path, ref, meta);
+    cacheSet(cacheKey, placeholder);
+    return placeholder;
+  }
   if (!isTextFile(name)) {
     const placeholder = buildBinaryPlaceholder(owner, repo, path, ref, meta);
     cacheSet(cacheKey, placeholder);

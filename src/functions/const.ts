@@ -44,7 +44,9 @@ function getHostInsets(): { top: number; right: number } {
 function syncSidebarLayout(sidebar: HTMLElement): void {
   const { top, right } = getHostInsets();
   sidebar.style.top = `${top}px`;
-  sidebar.style.height = `calc(100dvh - ${top}px)`;
+  sidebar.style.bottom = '0';
+  sidebar.style.height = '';
+  sidebar.style.maxHeight = '';
 
   if (sidebar.classList.contains('bp-fullscreen')) {
     sidebar.style.width = right ? `calc(100vw - ${right}px)` : '100vw';
@@ -81,6 +83,7 @@ function watchHostLayout(sidebar: HTMLElement): () => void {
 }
 
 let stopLayoutWatch: (() => void) | null = null;
+let hostBodyOverflow = '';
 
 function getExtensionUrl(path: string): string {
   const g = globalThis as Record<string, unknown>;
@@ -157,10 +160,10 @@ function injectStyles(): void {
     #${BP_SIDEBAR_ID} {
       position: fixed;
       top: 0;
+      bottom: 0;
       left: 0;
       width: 860px;
       max-width: 92vw;
-      height: 100dvh;
       z-index: 100000;
       background: #020617;
       box-shadow: 6px 0 32px rgba(0, 0, 0, 0.35);
@@ -169,6 +172,7 @@ function injectStyles(): void {
       display: flex;
       flex-direction: column;
       box-sizing: border-box;
+      overflow: hidden;
     }
     #${BP_SIDEBAR_ID}.bp-open {
       transform: translateX(0);
@@ -191,10 +195,13 @@ function injectStyles(): void {
       background: rgba(255, 255, 255, 0.12);
     }
     #${BP_SIDEBAR_ID} > iframe {
-      flex: 1;
+      flex: 1 1 0;
+      min-height: 0;
       width: 100%;
+      height: 100%;
       border: none;
       display: block;
+      overflow: hidden;
     }
   `;
   document.head.appendChild(style);
@@ -287,6 +294,8 @@ function openSidebar(): void {
   }
 
   syncSidebarLayout(sidebar);
+  hostBodyOverflow = document.body.style.overflow;
+  document.body.style.overflow = 'hidden';
 
   requestAnimationFrame(() => {
     sidebar!.classList.add('bp-open');
@@ -303,6 +312,7 @@ function closeSidebar(): void {
     stopLayoutWatch = null;
     setTimeout(() => { sidebar.remove(); }, 310);
   }
+  document.body.style.overflow = hostBodyOverflow;
   document.getElementById(BP_BTN_ID)?.classList.remove('bp-active');
 }
 

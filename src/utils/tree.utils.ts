@@ -139,6 +139,62 @@ export function getBreadcrumbSegments(filePath: string): BreadcrumbSegment[] {
   return segments;
 }
 
+const README_CANDIDATES = [
+  'readme.md',
+  'readme.mdx',
+  'readme.markdown',
+  'readme.rst',
+  'readme.txt',
+  'readme',
+];
+
+export function findReadmePath(items: GitHubTreeItem[]): string | null {
+  const rootFiles = items.filter(item => item.type === 'blob' && !item.path.includes('/'));
+  for (const candidate of README_CANDIDATES) {
+    const match = rootFiles.find(item => item.path.toLowerCase() === candidate);
+    if (match) return match.path;
+  }
+  return null;
+}
+
+/** Shallowest blob under a directory, then alphabetical. */
+export function findFirstFileInDirectory(
+  items: GitHubTreeItem[],
+  dirPath: string,
+): string | null {
+  const prefix = dirPath ? `${dirPath}/` : '';
+  const matches = items
+    .filter(item => item.type === 'blob' && item.path.startsWith(prefix))
+    .map(item => ({
+      path: item.path,
+      depth: item.path.slice(prefix.length).split('/').length,
+    }))
+    .sort((a, b) => {
+      if (a.depth !== b.depth) return a.depth - b.depth;
+      return a.path.localeCompare(b.path);
+    });
+
+  return matches[0]?.path ?? null;
+}
+
+export function expandPathInTree(nodes: TreeNodeData[], targetPath: string): TreeNodeData[] {
+  return nodes.map(node => {
+    const shouldExpand =
+      node.type === 'dir' &&
+      (node.path === targetPath || targetPath.startsWith(`${node.path}/`));
+
+    const children = Array.isArray(node.children)
+      ? expandPathInTree(node.children, targetPath)
+      : node.children;
+
+    return {
+      ...node,
+      isExpanded: shouldExpand ? true : node.isExpanded,
+      children,
+    };
+  });
+}
+
 export function searchFilesInTree(
   items: GitHubTreeItem[],
   query: string,

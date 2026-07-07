@@ -18,6 +18,7 @@ export interface TreeNodeData {
 export interface AppState {
   view: AppView;
   repo: GitHubRepo | null;
+  currentBranch: string;
   currentPath: string;
   selectedFile: GitHubFileContent | null;
   isLoadingFile: boolean;
@@ -27,7 +28,8 @@ export interface AppState {
 
 export type AppAction =
   | { type: 'SET_VIEW'; payload: AppView }
-  | { type: 'SET_REPO'; payload: GitHubRepo }
+  | { type: 'SET_REPO'; payload: { repo: GitHubRepo; branch: string } }
+  | { type: 'SET_BRANCH'; payload: string }
   | { type: 'SET_CURRENT_PATH'; payload: string }
   | { type: 'SET_SELECTED_FILE'; payload: GitHubFileContent | null }
   | { type: 'SET_LOADING_FILE'; payload: boolean }

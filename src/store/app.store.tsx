@@ -7,6 +7,7 @@ import type { AppState, AppAction, AppContextValue } from '../types/app.types';
 export const initialState: AppState = {
   view: 'home',
   repo: null,
+  currentBranch: '',
   currentPath: '',
   selectedFile: null,
   isLoadingFile: false,
@@ -22,8 +23,19 @@ function appReducer(state: AppState, action: AppAction): AppState {
     case 'SET_REPO':
       return {
         ...state,
-        repo: action.payload,
+        repo: action.payload.repo,
+        currentBranch: action.payload.branch,
         view: 'explorer',
+        currentPath: '',
+        selectedFile: null,
+        searchQuery: '',
+        error: null,
+      };
+
+    case 'SET_BRANCH':
+      return {
+        ...state,
+        currentBranch: action.payload,
         currentPath: '',
         selectedFile: null,
         searchQuery: '',

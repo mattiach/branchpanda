@@ -232,7 +232,6 @@ export function Pressable({
     <motion.button
       type={type}
       whileTap={tap}
-      whileHover={hover}
       transition={SPRING.snappy}
       className={className}
       disabled={disabled}

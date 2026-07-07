@@ -3,10 +3,11 @@ import { useAppStore } from '../../store/app.store';
 import { useResizable } from '../../hooks/useResizable';
 import { usePrefBool, usePrefString } from '../../hooks/usePref';
 import { ResizableHandle } from '../ui/ResizableHandle';
-import { decodeBase64Content, isTextFile, formatFileSize } from '../../utils/file.utils';
+import { decodeBase64Content, isTextFile, isRasterImageFile, formatFileSize, getFileExtension } from '../../utils/file.utils';
 import { findTextMatches, highlightRawMatches } from '../../utils/text-search.utils';
 import { FileContentSearch } from '../file/FileContentSearch';
 import { PREF } from '../../services/cache.service';
+import { buildRawFileUrl } from '../../services/file-content.service';
 import { FileToolbar } from '../file/FileToolbar';
 import { LoadingSpinner } from '../ui/LoadingSpinner';
 import { EmptyState } from '../ui/EmptyState';
@@ -90,9 +91,21 @@ export function CodeSidebar({ fullWidth = false, onFullWidthChange, onMobileClos
   }
 
   const file = state.selectedFile;
+  const isSvg = file ? getFileExtension(file.name) === 'svg' : false;
+  const isRaster = file ? isRasterImageFile(file.name) : false;
   const isText = file ? isTextFile(file.name) : false;
   const decoded = file && isText ? decodeBase64Content(file.content) : null;
   const isLoading = state.isLoadingFile;
+  const imageUrl =
+    file && state.repo && (isRaster || (isSvg && viewMode === 'preview'))
+      ? buildRawFileUrl(
+        state.repo.owner.login,
+        state.repo.name,
+        state.currentBranch || state.repo.default_branch,
+        file.path,
+      )
+      : null;
+  const showsSourceToggle = isText && !isRaster;
   const textMatches = useMemo(
     () => (decoded && fileSearch.trim() ? findTextMatches(decoded, fileSearch) : []),
     [decoded, fileSearch],
@@ -123,41 +136,47 @@ export function CodeSidebar({ fullWidth = false, onFullWidthChange, onMobileClos
 
   const toolbar = (
     <div class="flex flex-wrap items-center gap-2 border-b border-border bg-card/80 px-3 sm:px-4 py-2 shrink-0 min-w-0 w-full">
-      <div class="flex gap-1 rounded-lg border border-border bg-muted p-0.5">
-        {(['preview', 'raw'] as ViewMode[]).map(m => {
-          const active = viewMode === m;
-          return (
-            <Pressable
-              key={m}
-              type="button"
-              onClick={() => setViewMode(m)}
-              className={`flex items-center gap-1 rounded px-2 sm:px-2.5 py-1 text-xs font-medium transition-colors cursor-pointer ${active
-                ? 'bg-primary text-primary-foreground'
-                : 'text-muted-foreground hover:text-foreground'
-                }`}
-            >
-              <Icon
-                name={m === 'preview' ? 'document' : 'console'}
-                size={12}
-                class={active ? 'brightness-0 invert' : ''}
-              />
-              <span class="hidden sm:inline">{m === 'preview' ? 'Preview' : 'Raw'}</span>
-            </Pressable>
-          );
-        })}
-      </div>
+      {showsSourceToggle && (
+        <div class="flex gap-1 rounded-lg border border-border bg-muted p-0.5">
+          {(['preview', 'raw'] as ViewMode[]).map(m => {
+            const active = viewMode === m;
+            const previewLabel = isSvg && m === 'preview' ? 'Preview' : m === 'preview' ? 'Preview' : 'Raw';
+            const previewIcon = isSvg && m === 'preview' ? 'image' : m === 'preview' ? 'document' : 'console';
+            return (
+              <Pressable
+                key={m}
+                type="button"
+                onClick={() => setViewMode(m)}
+                className={`flex items-center gap-1 rounded px-2 sm:px-2.5 py-1 text-xs font-medium transition-colors cursor-pointer ${active
+                  ? 'bg-primary text-primary-foreground'
+                  : 'text-muted-foreground hover:text-foreground'
+                  }`}
+              >
+                <Icon
+                  name={previewIcon}
+                  size={12}
+                  class={active ? 'brightness-0 invert' : ''}
+                />
+                <span class="hidden sm:inline">{previewLabel}</span>
+              </Pressable>
+            );
+          })}
+        </div>
+      )}
 
-      <Pressable
-        type="button"
-        onClick={toggleWrap}
-        title={wrapLines ? 'Disable line wrap' : 'Wrap long lines'}
-        className={`flex items-center gap-1 rounded px-2 py-1 text-xs font-medium transition-colors cursor-pointer ${!wrapLines
-          ? 'bg-primary text-primary-foreground'
-          : 'text-muted-foreground hover:text-foreground hover:bg-accent'
-          }`}
-      >
-        <span class="inline">No wrap</span>
-      </Pressable>
+      {isText && !isRaster && (
+        <Pressable
+          type="button"
+          onClick={toggleWrap}
+          title={wrapLines ? 'Disable line wrap' : 'Wrap long lines'}
+          className={`flex items-center gap-1 rounded px-2 py-1 text-xs font-medium transition-colors cursor-pointer ${!wrapLines
+            ? 'bg-primary text-primary-foreground'
+            : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+            }`}
+        >
+          <span class="inline">No wrap</span>
+        </Pressable>
+      )}
 
       <Pressable
         type="button"
@@ -172,7 +191,7 @@ export function CodeSidebar({ fullWidth = false, onFullWidthChange, onMobileClos
         <span class="hidden sm:inline">{fullWidth ? 'Exit full' : 'Full width'}</span>
       </Pressable>
 
-      {isText && !isLoading && (
+      {isText && !isRaster && !isLoading && (
         <FileContentSearch
           value={fileSearch}
           onChange={setFileSearch}
@@ -198,7 +217,23 @@ export function CodeSidebar({ fullWidth = false, onFullWidthChange, onMobileClos
         </div>
       ) : (
         <AnimatePresence mode="wait">
-          {!isText ? (
+          {imageUrl ? (
+            <motion.div
+              key="image-preview"
+              className="h-full min-h-full flex items-center justify-center p-4"
+              variants={fade}
+              initial={motionInitial(reduced, 'initial')}
+              animate="animate"
+              exit="exit"
+            >
+              <img
+                src={imageUrl}
+                alt={file.name}
+                class="max-w-full max-h-full object-contain"
+                draggable={false}
+              />
+            </motion.div>
+          ) : !isText ? (
             <motion.div
               key="binary"
               className="h-full min-h-full flex items-center justify-center"
@@ -276,7 +311,7 @@ export function CodeSidebar({ fullWidth = false, onFullWidthChange, onMobileClos
   return (
     <aside
       style={panelMinWidth}
-      class="relative hidden lg:flex flex-col flex-1 min-w-0 w-full border-l border-border bg-background overflow-hidden min-h-0"
+      class="relative z-0 hidden lg:flex flex-col flex-1 min-w-0 w-full min-h-0 border-l border-border bg-background overflow-hidden"
     >
       {!fullWidth && (
         <ResizableHandle

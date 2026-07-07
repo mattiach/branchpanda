@@ -33,6 +33,17 @@ export function isTextFile(filename: string): boolean {
   return noExtFiles.includes(filename.toLowerCase());
 }
 
+const IMAGE_EXTENSIONS = new Set(['png', 'jpg', 'jpeg', 'gif', 'svg', 'webp', 'avif']);
+
+export function isImageFile(filename: string): boolean {
+  return IMAGE_EXTENSIONS.has(getFileExtension(filename));
+}
+
+export function isRasterImageFile(filename: string): boolean {
+  const ext = getFileExtension(filename);
+  return ext !== 'svg' && IMAGE_EXTENSIONS.has(ext);
+}
+
 export function formatFileSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;

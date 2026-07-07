@@ -45,7 +45,8 @@ export function RepoTreeProvider({ children }: { children: ComponentChildren }) 
     }
 
     let cancelled = false;
-    const { owner: { login: owner }, name: repoName, default_branch: branch } = repo;
+    const { owner: { login: owner }, name: repoName } = repo;
+    const branch = state.currentBranch || repo.default_branch;
 
     async function load() {
       setIsLoading(true);
@@ -75,7 +76,7 @@ export function RepoTreeProvider({ children }: { children: ComponentChildren }) 
 
     void load();
     return () => { cancelled = true; };
-  }, [repo?.full_name, dispatch]);
+  }, [repo?.full_name, state.currentBranch, dispatch]);
 
   const value = useMemo<RepoTreeContextValue>(() => ({
     tree,
