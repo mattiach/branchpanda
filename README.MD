@@ -13,6 +13,10 @@ The extension runs inside public GitHub repositories. Clicking the **“BranchPa
 From there you can:
 
 - Browse the current repository with a fast, structured file explorer
+- Switch between branches and pick up where you left off (your last branch is remembered per repository)
+- Preview images directly in the file panel
+- Navigate folders via clickable breadcrumbs
+- Quickly reopen recent repositories from the home screen
 - Switch to another repository by entering:
   - GitHub username
   - Repository name
