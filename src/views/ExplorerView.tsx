@@ -1,15 +1,50 @@
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 import { useAppStore } from '../store/app.store';
 import { PREF } from '../services/cache.service';
 import { usePrefBool } from '../hooks/usePref';
 import { isEmbedded, setEmbedFullWidth } from '../utils/embed.utils';
-import { RepoTreeProvider } from '../contexts/repo-tree.context';
+import { RepoTreeProvider, useRepoTree } from '../contexts/repo-tree.context';
+import { useFileViewer } from '../hooks/useFileViewer';
+import { findReadmePath } from '../utils/tree.utils';
 import { Sidebar } from '../components/layout/Sidebar';
 import { Breadcrumbs } from '../components/layout/Breadcrumbs';
 import { CodeSidebar } from '../components/layout/CodeSidebar';
 import { DirectoryView } from '../components/explorer/DirectoryView';
 import { ErrorBanner } from '../components/ui/ErrorBanner';
 import { AnimatePresence, SlideFromRight, motion, fadeUp, motionInitial, useMotionTransition } from '../animations';
+
+function ReadmeAutoOpen() {
+  const { state } = useAppStore();
+  const { flatItems, isReady } = useRepoTree();
+  const { openFile } = useFileViewer();
+  const attemptedRef = useRef('');
+
+  useEffect(() => {
+    if (!state.repo || !isReady) return;
+
+    const key = `${state.repo.full_name}@${state.currentBranch}`;
+    if (attemptedRef.current === key) return;
+    if (state.selectedFile || state.currentPath || state.searchQuery.trim()) return;
+
+    const readmePath = findReadmePath(flatItems);
+    attemptedRef.current = key;
+
+    if (readmePath) {
+      void openFile(readmePath);
+    }
+  }, [
+    state.repo,
+    state.currentBranch,
+    state.selectedFile,
+    state.currentPath,
+    state.searchQuery,
+    isReady,
+    flatItems,
+    openFile,
+  ]);
+
+  return null;
+}
 
 export function ExplorerView() {
   const { state, dispatch } = useAppStore();
@@ -45,7 +80,8 @@ export function ExplorerView() {
 
   return (
     <RepoTreeProvider>
-      <main class="flex flex-1 min-h-0 overflow-hidden bg-background">
+      <ReadmeAutoOpen />
+      <main class="flex flex-1 min-h-0 h-full overflow-hidden bg-background">
         {!codeFullWidth && (
           <Sidebar mobileOpen={treeOpen} onMobileClose={() => setTreeOpen(false)} />
         )}
@@ -57,7 +93,7 @@ export function ExplorerView() {
           />
         )}
 
-        <div class="flex flex-col flex-1 min-w-0 overflow-hidden">
+        <div class="flex flex-col flex-1 min-w-0 min-h-0 overflow-hidden">
           <Breadcrumbs onOpenTree={openTree} showTreeToggle={showTreeToggle} />
 
           <AnimatePresence>
@@ -78,7 +114,7 @@ export function ExplorerView() {
             )}
           </AnimatePresence>
 
-          <div class="flex flex-1 min-h-0 overflow-hidden flex-col lg:flex-row">
+          <div class="relative z-0 flex flex-1 min-h-0 overflow-hidden flex-col lg:flex-row">
             <AnimatePresence mode="wait">
               {!hasFile ? (
                 <motion.div
