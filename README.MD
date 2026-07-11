@@ -2,6 +2,16 @@
 
 _BranchPanda is an IDE-like browser extension that improves GitHub repository navigation, allowing fast exploration of the current repo or switching to another one directly from a built-in interface._
 
+## Installation
+
+Install BranchPanda from your browser's extension store:
+
+**Chrome Web Store (Chrome, Brave, Edge, Opera, Vivaldi, Thorium and other Chromium-based browsers)**  
+ https://chromewebstore.google.com/detail/branchpanda/coijnojhjpjmkpijopilhpmfnhfbepid
+
+**Firefox Add-ons**  
+ https://addons.mozilla.org/it/firefox/addon/branchpanda/
+
 ## How it works
 
 The extension runs inside public GitHub repositories. Clicking the **“BranchPanda”** button in the repository header opens an IDE-like navigation panel.
@@ -57,6 +67,8 @@ After the build finishes, load the `dist/` folder as an unpacked extension in yo
 
 - **Chrome / Edge / Brave:** open `chrome://extensions` (or the equivalent page in your browser), enable **Developer mode**, then click **Load unpacked** and select the `dist/` folder.
 - **Firefox:** open `about:debugging`, click **This Firefox**, then **Load Temporary Add-on** and select any file inside the `dist/` folder (for example `manifest.json`).
+
+> Looking for the easiest way to install BranchPanda? Download the pre-built extension directly from the **[Chrome Web Store](https://chromewebstore.google.com/detail/branchpanda/coijnojhjpjmkpijopilhpmfnhfbepid)** or **[Firefox Add-ons](https://addons.mozilla.org/it/firefox/addon/branchpanda/)** - installation takes just two clicks! 🐼
 
 ## Author
 
