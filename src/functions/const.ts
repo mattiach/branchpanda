@@ -1,5 +1,7 @@
 const defaultButtonContainerSelector = '[data-testid="repo-header-actions"]';
 
+const notLoggedButtonSelector = '#ref-picker-repos-header-ref-selector'
+
 /**
  * BranchPanda content script.
  *
@@ -40,6 +42,13 @@ function getHostInsets(): { top: number; right: number } {
   const right = hasPageScrollbar ? HOST_SCROLLBAR_RESERVE : 0;
 
   return { top, right };
+}
+
+function getButtonContainer(): Element | null {
+  return (
+    document.querySelector(defaultButtonContainerSelector) ??
+    document.querySelector(notLoggedButtonSelector)
+  );
 }
 
 function syncSidebarLayout(sidebar: HTMLElement): void {
@@ -109,7 +118,7 @@ function getRepo(): string | null {
   ]);
   if (nonRepoOwners.has(owner)) return null;
 
-  if (!document.querySelector(defaultButtonContainerSelector)) return null;
+  if (!getButtonContainer()) return null;
 
   return `${m[1]}/${m[2]}`;
 }
@@ -213,6 +222,10 @@ function createButton(): HTMLButtonElement {
   btn.id = BP_BTN_ID;
   btn.type = 'button';
   btn.setAttribute('aria-label', 'Open BranchPanda file explorer');
+
+  btn.style.flexShrink = '0';
+  btn.style.whiteSpace = 'nowrap';
+  btn.style.width = 'auto';
 
   const icon = document.createElement('img');
   icon.className = 'bp-icon';
@@ -328,11 +341,29 @@ function injectButton(): void {
   const repo = getRepo();
   if (!repo) return;
 
-  const container = document.querySelector(defaultButtonContainerSelector);
-  if (!container) return;
+  const defaultContainer = document.querySelector(defaultButtonContainerSelector);
 
   injectStyles();
-  container.insertBefore(createButton(), container.firstChild);
+
+  if (defaultContainer) {
+    defaultContainer.insertBefore(createButton(), defaultContainer.firstChild);
+    return;
+  }
+
+  const notLoggedButton = document.querySelector(notLoggedButtonSelector);
+  if (!notLoggedButton) return;
+
+  const wrapper = document.createElement('div');
+  wrapper.id = 'branchpanda-fallback-wrapper';
+
+  wrapper.style.display = 'flex';
+  wrapper.style.alignItems = 'center';
+  wrapper.style.gap = '0.5em';
+
+  notLoggedButton.parentElement?.insertBefore(wrapper, notLoggedButton);
+
+  wrapper.appendChild(notLoggedButton);
+  wrapper.appendChild(createButton());
 }
 
 function removeInjection(): void {
