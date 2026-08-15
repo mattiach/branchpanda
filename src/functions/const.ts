@@ -1,8 +1,10 @@
+const defaultButtonContainerSelector = '[data-testid="repo-header-actions"]';
+
 /**
  * BranchPanda content script.
  *
  * Injected into every https://github.com/{owner}/{repo}/* page.
- * – Detects repository pages via the stable #repository-details-container element.
+ * – Detects repository pages via the stable {@link defaultButtonContainerSelector} element.
  * – Inserts a "BranchPanda" button as the first <li> in the actions <ul>.
  * – Clicking the button slides in a fixed sidebar from the left containing the
  *   extension popup in an <iframe>, pre-loading the current repository automatically.
@@ -15,7 +17,6 @@ import pandaIconUrl from '../assets/app/branchpanda-icon.svg?url';
 const BP_BTN_ID = 'branchpanda-btn';
 const BP_SIDEBAR_ID = 'branchpanda-sidebar';
 const BP_STYLES_ID = 'branchpanda-styles';
-const BP_INJECTED_LI_ID = 'branchpanda-btn-li';
 const BP_RESIZE_ID = 'branchpanda-resize-handle';
 const DEFAULT_SIDEBAR_WIDTH = 860;
 const HOST_SCROLLBAR_RESERVE = 14;
@@ -108,7 +109,7 @@ function getRepo(): string | null {
   ]);
   if (nonRepoOwners.has(owner)) return null;
 
-  if (!document.getElementById('repository-details-container')) return null;
+  if (!document.querySelector(defaultButtonContainerSelector)) return null;
 
   return `${m[1]}/${m[2]}`;
 }
@@ -207,10 +208,7 @@ function injectStyles(): void {
   document.head.appendChild(style);
 }
 
-function createButtonLi(): HTMLLIElement {
-  const li = document.createElement('li');
-  li.id = BP_INJECTED_LI_ID;
-
+function createButton(): HTMLButtonElement {
   const btn = document.createElement('button');
   btn.id = BP_BTN_ID;
   btn.type = 'button';
@@ -226,8 +224,7 @@ function createButtonLi(): HTMLLIElement {
   btn.appendChild(document.createTextNode(' BranchPanda'));
   btn.addEventListener('click', toggleSidebar);
 
-  li.appendChild(btn);
-  return li;
+  return btn;
 }
 
 function attachResizeHandle(sidebar: HTMLDivElement): void {
@@ -326,23 +323,20 @@ function toggleSidebar(): void {
 }
 
 function injectButton(): void {
-  if (document.getElementById(BP_INJECTED_LI_ID)) return;
+  if (document.getElementById(BP_BTN_ID)) return;
 
   const repo = getRepo();
   if (!repo) return;
 
-  const container = document.getElementById('repository-details-container');
+  const container = document.querySelector(defaultButtonContainerSelector);
   if (!container) return;
 
-  const ul = container.querySelector('ul');
-  if (!ul) return;
-
   injectStyles();
-  ul.insertBefore(createButtonLi(), ul.firstChild);
+  container.insertBefore(createButton(), container.firstChild);
 }
 
 function removeInjection(): void {
-  document.getElementById(BP_INJECTED_LI_ID)?.remove();
+  document.getElementById(BP_BTN_ID)?.remove();
   document.getElementById(BP_SIDEBAR_ID)?.remove();
 }
 
