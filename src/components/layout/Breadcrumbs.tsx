@@ -7,6 +7,7 @@ import { cacheGet, cacheSet, saveRepoBranch } from '../../services/cache.service
 import { fetchBranches } from '../../services/github.service';
 import { getBreadcrumbSegments } from '../../utils/tree.utils';
 import { HamburgerIcon } from '../ui/HamburgerIcon';
+import { ChevronIcon } from '../ui/ChevronIcon';
 import { LoadingSpinner } from '../ui/LoadingSpinner';
 import { Icon } from '../ui/Icon';
 import { Pressable } from '../../animations';
@@ -209,7 +210,7 @@ export function Breadcrumbs({ onOpenTree, showTreeToggle = false }: Props) {
             >
               <Icon name="git" size={12} class="shrink-0" />
               <span class="truncate">{state.currentBranch}</span>
-              <span class="text-[9px] text-muted-foreground/70 shrink-0">{branchOpen ? '▴' : '▾'}</span>
+              <ChevronIcon direction={branchOpen ? 'up' : 'down'} size={11} class="text-muted-foreground/70" />
             </Pressable>
           </div>
 

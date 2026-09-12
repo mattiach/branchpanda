@@ -14,7 +14,7 @@ export function EmptyState({ icon = 'folder', title, description, fill = false }
   const content = (
     <>
       <Icon name={icon} size={40} class="opacity-60" />
-      <p class="text-sm font-medium text-muted-foreground">{title}</p>
+      <p class="text-sm font-medium text-foreground">{title}</p>
       {description && (
         <p class="max-w-xs text-xs text-muted-foreground leading-relaxed">{description}</p>
       )}

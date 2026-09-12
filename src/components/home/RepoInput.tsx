@@ -51,8 +51,8 @@ export function RepoInput({ suggestedRepo }: Props) {
         >
           <Icon name="branchPanda" size={64} class="mb-4 drop-shadow-lg mx-auto" />
         </motion.div>
-        <h1 class="text-xl sm:text-2xl font-bold text-foreground tracking-tight">BranchPanda</h1>
-        <p class="text-sm text-muted-foreground mt-1.5">Explore any public GitHub repository</p>
+        <h1 class="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">BranchPanda</h1>
+        <p class="text-sm text-muted-foreground mt-2">Explore any public GitHub repository</p>
       </StaggerItem>
 
       <StaggerItem className="w-full">
@@ -78,7 +78,7 @@ export function RepoInput({ suggestedRepo }: Props) {
 
       {recentRepos.length > 0 && (
         <StaggerItem className="flex flex-col items-center gap-2 w-full min-w-0 overflow-hidden">
-          <span class="text-xs text-muted-foreground select-none">Recent</span>
+          <span class="text-[0.625em] font-medium uppercase tracking-wider text-muted-foreground select-none">Recent</span>
 
           <div class="flex flex-col gap-1.5 w-full min-w-0 max-h-40 overflow-y-auto overflow-x-hidden">
             {recentRepos.map(entry => (
@@ -107,14 +107,14 @@ export function RepoInput({ suggestedRepo }: Props) {
       )}
 
       <StaggerItem className="flex flex-col items-center gap-2 w-full">
-        <span class="text-xs text-muted-foreground select-none">Try an example</span>
+        <span class="text-[0.625em] font-medium uppercase tracking-wider text-muted-foreground select-none">Try an example</span>
         <div class="flex gap-2 flex-wrap justify-center">
           {EXAMPLES.map((ex, index) => (
             <Pressable
               key={ex}
               type="button"
               onClick={() => setInput(ex)}
-              className={`rounded-lg border border-border bg-muted/50 px-3 py-1.5 text-xs text-muted-foreground hover:border-ring/50 hover:text-primary transition-colors cursor-pointer ${index !== EXAMPLES.length - 1 ? 'hidden sm:inline-flex' : ''
+              className={`rounded-full border border-border bg-muted/50 px-3 py-1.5 text-xs text-muted-foreground hover:border-ring/50 hover:text-primary transition-colors cursor-pointer ${index !== EXAMPLES.length - 1 ? 'hidden sm:inline-flex' : ''
                 }`}
             >
               {ex}

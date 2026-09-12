@@ -1,5 +1,6 @@
 import { getFileIconName, getFolderIconName } from '../../utils/icons.utils';
 import { Icon } from '../ui/Icon';
+import { ChevronIcon } from '../ui/ChevronIcon';
 import type { TreeNodeData } from '../../types/app.types';
 import { Collapse } from '../../animations';
 
@@ -12,15 +13,17 @@ interface Props {
   level?: number;
 }
 
+const SELECTED_MARKER = 'shadow-[inset_2px_0_0_var(--primary)]';
+
 const rowClass = (selected: boolean, file = false) =>
-  `flex w-full items-center gap-1.5 py-0.75 pr-3 text-left text-xs transition-colors cursor-pointer ${
+  `flex w-full items-center gap-1.5 py-1.5 pr-3 text-left text-xs transition-colors cursor-pointer ${
     selected
       ? file
-        ? 'bg-primary/20 text-primary'
-        : 'bg-sidebar-accent text-sidebar-accent-foreground'
+        ? `bg-primary/15 text-primary font-medium ${SELECTED_MARKER}`
+        : `bg-sidebar-accent text-sidebar-accent-foreground ${SELECTED_MARKER}`
       : file
-        ? 'text-muted-foreground hover:bg-sidebar-accent/30 hover:text-sidebar-foreground'
-        : 'text-sidebar-foreground hover:bg-sidebar-accent/30'
+        ? 'text-muted-foreground hover:bg-sidebar-accent/40 hover:text-sidebar-foreground'
+        : 'text-sidebar-foreground hover:bg-sidebar-accent/40'
   }`;
 
 export function TreeNode({ node, onToggle, onFileClick, selectedPath, highlightPath, level = 0 }: Props) {
@@ -41,11 +44,11 @@ export function TreeNode({ node, onToggle, onFileClick, selectedPath, highlightP
           class={rowClass(isSelected || isHighlighted)}
           title={node.path}
         >
-          <span class="shrink-0 w-3 text-[9px] text-muted-foreground text-center">
-            {node.isExpanded ? '▾' : '▸'}
+          <span class="shrink-0 w-3 flex items-center justify-center text-muted-foreground">
+            <ChevronIcon direction={node.isExpanded ? 'down' : 'right'} size={11} />
           </span>
           <Icon name={getFolderIconName(node.name)} size={14} />
-          <span class="truncate leading-relaxed">{node.name}</span>
+          <span class="truncate leading-none">{node.name}</span>
         </button>
 
         <Collapse open={node.isExpanded && Array.isArray(node.children)}>
@@ -83,7 +86,7 @@ export function TreeNode({ node, onToggle, onFileClick, selectedPath, highlightP
       title={node.path}
     >
       <Icon name={getFileIconName(node.name)} size={14} />
-      <span class="truncate leading-relaxed">{node.name}</span>
+      <span class="truncate leading-none">{node.name}</span>
     </button>
   );
 }
