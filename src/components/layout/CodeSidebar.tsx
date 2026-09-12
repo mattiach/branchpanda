@@ -135,7 +135,7 @@ export function CodeSidebar({ fullWidth = false, onFullWidthChange, onMobileClos
   if (!file) return null;
 
   const toolbar = (
-    <div class="flex flex-wrap items-center gap-2 border-b border-border bg-card/80 px-3 sm:px-4 py-2 shrink-0 min-w-0 w-full">
+    <div class="flex flex-wrap items-center gap-2 border-b border-border bg-card px-3 sm:px-4 py-2 shrink-0 min-w-0 w-full">
       {showsSourceToggle && (
         <div class="flex gap-1 rounded-lg border border-border bg-muted p-0.5">
           {(['preview', 'raw'] as ViewMode[]).map(m => {

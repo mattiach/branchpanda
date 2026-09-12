@@ -59,7 +59,7 @@ export function Header() {
   }
 
   return (
-    <header class="flex items-center gap-2 sm:gap-3 border-b border-border bg-background px-3 sm:px-4 py-2 shrink-0 select-none min-w-0">
+    <header class="flex items-center gap-2 sm:gap-3 border-b border-border bg-card px-3 sm:px-4 py-2 shrink-0 select-none min-w-0">
       <div class="flex items-center gap-2 sm:gap-3 flex-1 min-w-0 overflow-hidden">
         <div class="flex items-center gap-2 shrink-0">
           <Icon name="branchPanda" size={22} class="shrink-0" />
