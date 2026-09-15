@@ -49,7 +49,10 @@ function ReadmeAutoOpen() {
 export function ExplorerView() {
   const { state, dispatch } = useAppStore();
   const [treeOpen, setTreeOpen] = useState(false);
-  const [codeFullWidth, setCodeFullWidth] = usePrefBool(PREF.CODE_FULL_WIDTH, false);
+  const [fullWidthPref, setCodeFullWidth] = usePrefBool(PREF.CODE_FULL_WIDTH, false);
+  const embedded = isEmbedded();
+  // Full width only resizes the host sidebar on GitHub; ignore a stored pref elsewhere.
+  const codeFullWidth = embedded && fullWidthPref;
   const [isDesktop, setIsDesktop] = useState(
     () => typeof window !== 'undefined' && window.matchMedia('(min-width: 768px)').matches,
   );
@@ -68,9 +71,9 @@ export function ExplorerView() {
   }, [state.selectedFile?.path]);
 
   useEffect(() => {
-    if (!isEmbedded()) return;
+    if (!embedded) return;
     setEmbedFullWidth(codeFullWidth);
-  }, [codeFullWidth]);
+  }, [embedded, codeFullWidth]);
 
   function openTree() {
     setTreeOpen(true);
@@ -134,7 +137,7 @@ export function ExplorerView() {
                 >
                   <CodeSidebar
                     fullWidth={codeFullWidth}
-                    onFullWidthChange={setCodeFullWidth}
+                    onFullWidthChange={embedded ? setCodeFullWidth : undefined}
                     onMobileClose={() => dispatch({ type: 'SET_SELECTED_FILE', payload: null })}
                   />
                 </SlideFromRight>

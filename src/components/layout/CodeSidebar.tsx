@@ -178,18 +178,20 @@ export function CodeSidebar({ fullWidth = false, onFullWidthChange, onMobileClos
         </Pressable>
       )}
 
-      <Pressable
-        type="button"
-        onClick={toggleFullWidth}
-        title={fullWidth ? 'Exit full width' : 'Full width'}
-        className={`flex items-center gap-1 rounded px-2 py-1 text-xs font-medium transition-colors cursor-pointer ${fullWidth
-          ? 'bg-primary text-primary-foreground'
-          : 'text-muted-foreground hover:bg-accent hover:text-foreground'
-          }`}
-      >
-        <FullWidthIcon expanded={fullWidth} />
-        <span class="hidden sm:inline">{fullWidth ? 'Exit full' : 'Full width'}</span>
-      </Pressable>
+      {onFullWidthChange && (
+        <Pressable
+          type="button"
+          onClick={toggleFullWidth}
+          title={fullWidth ? 'Exit full width' : 'Full width'}
+          className={`flex items-center gap-1 rounded px-2 py-1 text-xs font-medium transition-colors cursor-pointer ${fullWidth
+            ? 'bg-primary text-primary-foreground'
+            : 'text-muted-foreground hover:bg-accent hover:text-foreground'
+            }`}
+        >
+          <FullWidthIcon expanded={fullWidth} />
+          <span class="hidden sm:inline">{fullWidth ? 'Exit full' : 'Full width'}</span>
+        </Pressable>
+      )}
 
       {isText && !isRaster && !isLoading && (
         <FileContentSearch
