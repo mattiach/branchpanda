@@ -17,6 +17,8 @@ import {
   useMotionTransition,
 } from '../../animations';
 import { parseGitHubRepo } from '../../utils/repo-url.utils';
+import { isEmbedded } from '../../utils/embed.utils';
+import { openUrlInTab } from '../../utils/browser.utils';
 
 const EXAMPLES = ['facebook/react', 'microsoft/vscode', 'mattiach/branchpanda'];
 
@@ -31,6 +33,17 @@ export function RepoInput({ suggestedRepo }: Props) {
   const [recentRepos] = useState(() => getRecentRepos());
   const { reduced } = useMotionTransition();
 
+  async function openRepository(owner: string, repo: string): Promise<void> {
+    if (isEmbedded()) {
+      await loadRepo(owner, repo);
+      return;
+    }
+
+    const url = new URL(`https://github.com/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}`);
+    url.searchParams.set('branchpanda', 'open');
+    openUrlInTab(url.href);
+  }
+
   async function handleSubmit(e: Event) {
     e.preventDefault();
     const parsed = parseGitHubRepo(input);
@@ -38,7 +51,8 @@ export function RepoInput({ suggestedRepo }: Props) {
       dispatch({ type: 'SET_ERROR', payload: 'Enter a valid repository: owner/repo or a GitHub URL.' });
       return;
     }
-    await loadRepo(parsed.owner, parsed.repo);
+
+    await openRepository(parsed.owner, parsed.repo);
   }
 
   return (
@@ -71,7 +85,7 @@ export function RepoInput({ suggestedRepo }: Props) {
             className="flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
           >
             {isLoading && <LoadingSpinner size="sm" />}
-            {isLoading ? 'Loading…' : 'Explore Repository'}
+            {isLoading ? 'Loading…' : 'Go to the repository'}
           </Pressable>
         </form>
       </StaggerItem>
@@ -86,7 +100,7 @@ export function RepoInput({ suggestedRepo }: Props) {
                 key={entry.full_name}
                 type="button"
                 motion="none"
-                onClick={() => void loadRepo(entry.owner, entry.name)}
+                onClick={() => void openRepository(entry.owner, entry.name)}
                 disabled={isLoading}
                 className="flex items-center gap-2 w-full min-w-0 rounded-lg border border-border bg-muted/50 px-3 py-2 text-xs text-muted-foreground hover:border-ring/50 hover:text-foreground transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >

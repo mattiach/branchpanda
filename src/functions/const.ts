@@ -94,6 +94,7 @@ function watchHostLayout(sidebar: HTMLElement): () => void {
 
 let stopLayoutWatch: (() => void) | null = null;
 let hostBodyOverflow = '';
+let autoOpenSidebar = new URLSearchParams(location.search).get('branchpanda') === 'open';
 
 function getExtensionUrl(path: string): string {
   const g = globalThis as Record<string, unknown>;
@@ -335,8 +336,21 @@ function toggleSidebar(): void {
   }
 }
 
+function openSidebarFromRedirect(): void {
+  if (!autoOpenSidebar) return;
+  autoOpenSidebar = false;
+
+  const url = new URL(location.href);
+  url.searchParams.delete('branchpanda');
+  history.replaceState(history.state, '', `${url.pathname}${url.search}${url.hash}`);
+  openSidebar();
+}
+
 function injectButton(): void {
-  if (document.getElementById(BP_BTN_ID)) return;
+  if (document.getElementById(BP_BTN_ID)) {
+    openSidebarFromRedirect();
+    return;
+  }
 
   const repo = getRepo();
   if (!repo) return;
@@ -347,6 +361,7 @@ function injectButton(): void {
 
   if (defaultContainer) {
     defaultContainer.insertBefore(createButton(), defaultContainer.firstChild);
+    openSidebarFromRedirect();
     return;
   }
 
@@ -364,6 +379,7 @@ function injectButton(): void {
 
   wrapper.appendChild(notLoggedButton);
   wrapper.appendChild(createButton());
+  openSidebarFromRedirect();
 }
 
 function removeInjection(): void {
