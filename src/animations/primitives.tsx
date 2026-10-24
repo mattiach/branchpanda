@@ -1,9 +1,8 @@
 import {
   AnimatePresence,
   LazyMotion,
-  domAnimation,
-  motion,
 } from 'motion/react';
+import * as motion from 'motion/react-m';
 
 import { useMotionTransition, motionInitial } from './hooks';
 import { DURATION, SPRING } from './tokens';
@@ -21,8 +20,9 @@ import type { ComponentChildren, JSX } from 'preact';
 import type { Variants, MotionStyle } from 'motion/react';
 
 export function MotionProvider({ children }: { children: ComponentChildren }) {
+  const loadFeatures = () => import('./features').then(({ default: features }) => features);
   return (
-    <LazyMotion features={domAnimation} strict>
+    <LazyMotion features={loadFeatures} strict>
       {children}
     </LazyMotion>
   );

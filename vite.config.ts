@@ -13,6 +13,7 @@ export default defineConfig({
     },
   },
   build: {
+    assetsInlineLimit: 0,
     rolldownOptions: {
       output: {
         codeSplitting: {
@@ -21,11 +22,6 @@ export default defineConfig({
               name: 'preact',
               test: /node_modules[\\/](preact|@preact)[\\/]/,
               priority: 30,
-            },
-            {
-              name: 'motion',
-              test: /node_modules[\\/](motion|framer-motion)[\\/]/,
-              priority: 25,
             },
             {
               name: 'prism-core',

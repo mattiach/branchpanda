@@ -1,10 +1,15 @@
 import { useEffect } from 'preact/hooks';
+import { lazy, Suspense } from 'preact/compat';
 import { AppProvider, useAppStore } from './store/app.store';
 import { useRepository } from './hooks/useRepository';
 import { Header } from './components/layout/Header';
 import { HomeView } from './views/HomeView';
-import { ExplorerView } from './views/ExplorerView';
+import { LoadingSpinner } from './components/ui/LoadingSpinner';
 import { MotionProvider, Presence, motion, page, motionInitial, useMotionTransition } from './animations';
+
+const ExplorerView = lazy(() =>
+  import('./views/ExplorerView').then(({ ExplorerView }) => ({ default: ExplorerView })),
+);
 
 function AutoLoader() {
   const { state } = useAppStore();
@@ -58,7 +63,15 @@ function AppContent() {
             animate="animate"
             exit="exit"
           >
-            <ExplorerView />
+            <Suspense
+              fallback={
+                <div class="flex flex-1 items-center justify-center">
+                  <LoadingSpinner size="lg" />
+                </div>
+              }
+            >
+              <ExplorerView />
+            </Suspense>
           </motion.div>
         )}
       </Presence>
