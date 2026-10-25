@@ -1,10 +1,10 @@
-<img width="100%" src="./preview/banner.png" alt="BranchPanda banner" />
+![BranchPanda banner](./preview/banner.png)
 
 <h1 align="center">BranchPanda 🐼</h1>
 
 <p align="center">
   <strong>An IDE-like file explorer for GitHub, right inside your browser.</strong><br />
-  Browse any public repository — tree view, instant file search, syntax highlighting, branch switching — without leaving the page you are on.
+  Browse public repositories with a file tree, instant search, syntax highlighting, and branch switching — without leaving GitHub.
 </p>
 
 <p align="center">
@@ -14,117 +14,120 @@
   <img alt="License" src="https://img.shields.io/badge/license-MIT-green" />
 </p>
 
----
+## Preview
 
-## Why BranchPanda
+<p align="center">
+  <img width="100%" src="./preview/renders/16-9/02-search.png" alt="BranchPanda home screen with recent and example repositories" />
+  <sub>Open a repository, revisit recent projects, or try an example.</sub>
+</p>
 
-GitHub's web UI reloads a full page for every folder you open. BranchPanda loads the repository tree once and keeps it in a sidebar, so jumping between files feels like working in an editor — no page reloads, no losing your place.
+<p align="center">
+  <img width="100%" src="./preview/renders/16-9/01-explorer.png" alt="BranchPanda explorer open beside a GitHub repository" />
+  <sub>Browse files and explore the repository tree without leaving GitHub.</sub>
+</p>
 
-|                             |                                                                                        |
-| --------------------------- | -------------------------------------------------------------------------------------- |
-| 🗂️ **Tree explorer**        | Full repository tree, lazy-loaded and cached, with 900+ file-type icons                |
-| 🔎 **Fuzzy file search**    | Type part of a path, get the file — fuzzy matching across the whole tree               |
-| 🎨 **Syntax highlighting**  | Prism-powered highlighting with line numbers, wrap toggle and Markdown preview         |
-| 🔤 **In-file search**       | <kbd>Ctrl</kbd>/<kbd>Cmd</kbd> + <kbd>F</kbd> inside the viewer, with match navigation |
-| 🌿 **Branch switcher**      | Switch branch from the breadcrumbs; your last branch is remembered per repository      |
-| 🖼️ **Image preview**        | Images render inline instead of downloading                                            |
-| ↔️ **Resizable sidebar**    | Drag to resize, or expand to full width; the size is remembered                        |
-| 🕘 **Recent repositories**  | Recently opened repos are one click away from the home screen                          |
-| 📋 **Quick actions**        | Copy file path, copy file URL, download file, copy the `git clone` command             |
-| ⚡ **No account, no token** | Anonymous GitHub API access — nothing to sign in to                                    |
+## Why BranchPanda?
 
----
+GitHub's web UI requires navigating between pages to explore files. BranchPanda keeps the repository tree and file viewer in a sidebar, making it easier to navigate between files without losing your place.
+
+| Feature                             | Description                                                                                    |
+| ----------------------------------- | ---------------------------------------------------------------------------------------------- |
+| 🗂️ **Tree explorer**                | Lazy-loaded, cached repository tree with 900+ file-type icons                                  |
+| 🔎 **Fuzzy file search**            | Find files by name or path across the repository                                               |
+| 🎨 **Syntax highlighting**          | Prism-powered highlighting, line numbers, line wrapping, and Markdown preview                  |
+| 🔤 **In-file search**               | Search within files using <kbd>Ctrl</kbd>/<kbd>Cmd</kbd> + <kbd>F</kbd>, with match navigation |
+| 🌿 **Branch switcher**              | Switch branches from the breadcrumbs; the last branch is remembered per repository             |
+| 🖼️ **Image preview**                | View images directly in the file viewer                                                        |
+| ↔️ **Resizable sidebar**            | Resize or expand the panel; its size is remembered                                             |
+| 🕘 **Recent repositories**          | Reopen recently visited repositories from the home screen                                      |
+| 📋 **Quick actions**                | Copy file paths and URLs, download files, or copy the `git clone` command                      |
+| ⚡ **No account or token required** | Access public repositories through the GitHub API without signing in                           |
 
 ## Installation
 
-Install from your browser's extension store — two clicks, no build step:
+Install BranchPanda directly from your browser's extension store.
 
-| Browser                                                                      | Store                                                                                                     |
-| ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| **Chrome, Brave, Edge, Opera, Vivaldi, Thorium** and other Chromium browsers | [Chrome Web Store](https://chromewebstore.google.com/detail/branchpanda/coijnojhjpjmkpijopilhpmfnhfbepid) |
-| **Firefox**                                                                  | [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/branchpanda/)                                  |
+| Browser                                                                             | Store                                                                                                     |
+| ----------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| **Chrome, Brave, Edge, Opera, Vivaldi, Thorium**, and other Chromium-based browsers | [Chrome Web Store](https://chromewebstore.google.com/detail/branchpanda/coijnojhjpjmkpijopilhpmfnhfbepid) |
+| **Firefox**                                                                         | [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/branchpanda/)                                  |
 
----
+## Usage
 
-## How it works
+On a public GitHub repository page, BranchPanda adds a button to the repository header. Click it to open the explorer panel, with the file tree on the left and the file viewer on the right.
 
-On any public repository page, BranchPanda injects a **BranchPanda** button into the repository header:
+You can:
 
-Clicking it slides in the explorer panel over the page — file tree on the left, file viewer on the right:
+- Browse folders and files through the repository tree.
+- Search for files by name or search within the currently open file.
+- Switch branches and restore the last selected branch for each repository.
+- Preview images and rendered Markdown.
+- Navigate folders using clickable breadcrumbs.
+- Open recent repositories or enter an `owner/repo` pair to explore another repository.
 
-<img width="100%" src="./preview/preview.png" alt="BranchPanda explorer panel open on a repository" />
+BranchPanda also works as a standalone popup from the browser toolbar, allowing you to explore repositories from any tab.
 
-From there you can:
+## Privacy and security
 
-- Browse the repository with a fast, structured file explorer
-- Search files by name, or search inside the file you are viewing
-- Switch branches and pick up where you left off (the last branch is stored per repository)
-- Preview images and rendered Markdown directly in the panel
-- Navigate folders via clickable breadcrumbs
-- Reopen recent repositories, or open any other repo by typing `owner` and `repo`
+### Public repositories only
 
-The panel also works as a standalone popup from the browser toolbar, so you can explore a repository from any tab.
+BranchPanda supports public repositories and does not request authentication or store access tokens. It uses the public GitHub API without requiring additional browser permissions.
 
----
+### Local storage
 
-## 🔒 Private repositories
+BranchPanda stores its data in your browser's `localStorage`, using the `branchpanda_` prefix. This includes:
 
-**BranchPanda supports public repositories only.**
+- Cached API responses, with a 5-minute TTL.
+- UI preferences and sidebar settings.
+- The last selected branch for each repository.
+- Recently opened repositories.
 
-This is a deliberate design choice: the extension requests no authentication, stores no token, and holds no `permissions` in its manifest — it only talks to the public GitHub API. That keeps the security surface close to zero. If private-repository support matters for your use case, you are welcome to fork the project and implement it.
-
-### What it stores
-
-Everything lives in your browser's `localStorage` under the `branchpanda_` prefix: API responses (5-minute TTL cache), UI preferences, the last branch per repository, and the list of recent repositories. Nothing is sent anywhere except `api.github.com` and `raw.githubusercontent.com`.
-
----
+Repository data is retrieved from `api.github.com` and `raw.githubusercontent.com`. BranchPanda does not send this data to other services.
 
 ## Tech stack
 
-|                  |                                                                              |
-| ---------------- | ---------------------------------------------------------------------------- |
-| **UI**           | [Preact](https://preactjs.com/) + TypeScript                                 |
-| **Styling**      | [Tailwind CSS v4](https://tailwindcss.com/)                                  |
-| **Animation**    | [Motion](https://motion.dev/)                                                |
-| **Highlighting** | [Prism.js](https://prismjs.com/)                                             |
-| **Build**        | [Vite](https://vite.dev/) — two builds: the popup app and the content script |
-| **Platform**     | Manifest V3, Chrome + Firefox                                                |
+| Component           | Technology                                   |
+| ------------------- | -------------------------------------------- |
+| UI                  | [Preact](https://preactjs.com/) + TypeScript |
+| Styling             | [Tailwind CSS v4](https://tailwindcss.com/)  |
+| Animation           | [Motion](https://motion.dev/)                |
+| Syntax highlighting | [Prism.js](https://prismjs.com/)             |
+| Build tool          | [Vite](https://vite.dev/)                    |
+| Platform            | Manifest V3, Chrome and Firefox              |
 
----
+Vite produces separate builds for the popup app and the content script.
 
 ## Development
 
 ### Prerequisites
 
-Install [Node.js](https://nodejs.org/) and [pnpm](https://pnpm.io/installation), then:
+Install [Node.js](https://nodejs.org/) and [pnpm](https://pnpm.io/installation), then install the dependencies:
 
 ```bash
 pnpm install
 ```
 
-### Scripts
+### Available scripts
 
-| Script                   | What it does                                                          |
-| ------------------------ | --------------------------------------------------------------------- |
-| `pnpm dev`               | Runs the panel as a plain web app in Vite's dev server                |
-| `pnpm build:chrome`      | Type-checks, builds, and copies the **Chrome** manifest into `dist/`  |
-| `pnpm build:firefox`     | Type-checks, builds, and copies the **Firefox** manifest into `dist/` |
-| `pnpm version:manifests` | Syncs both manifest versions with `package.json`                      |
+| Script                   | Description                                                            |
+| ------------------------ | ---------------------------------------------------------------------- |
+| `pnpm dev`               | Runs the panel as a standalone web app using Vite's development server |
+| `pnpm build:chrome`      | Type-checks and builds the Chrome extension into `dist/`               |
+| `pnpm build:firefox`     | Type-checks and builds the Firefox extension into `dist/`              |
+| `pnpm version:manifests` | Synchronizes both manifest versions with `package.json`                |
 
-The extension code is identical across browsers — only the manifest differs.
+The extension code is shared between browsers; only the manifest differs.
 
-### Loading the unpacked build
+### Load the unpacked extension
 
-- **Chrome / Edge / Brave:** open `chrome://extensions`, enable **Developer mode**, click **Load unpacked**, select `dist/`.
-- **Firefox:** open `about:debugging` → **This Firefox** → **Load Temporary Add-on**, select `dist/manifest.json`.
+- **Chrome, Edge, Brave, and other Chromium browsers:** Open `chrome://extensions`, enable **Developer mode**, click **Load unpacked**, and select `dist/`.
+- **Firefox:** Open `about:debugging` → **This Firefox** → **Load Temporary Add-on**, and select `dist/manifest.json`.
 
-> Just want to use it? Grab the published build from the **[Chrome Web Store](https://chromewebstore.google.com/detail/branchpanda/coijnojhjpjmkpijopilhpmfnhfbepid)** or **[Firefox Add-ons](https://addons.mozilla.org/firefox/addon/branchpanda/)** — installation takes two clicks. 🐼
-
----
+For regular use, install the published extension from the [Chrome Web Store](https://chromewebstore.google.com/detail/branchpanda/coijnojhjpjmkpijopilhpmfnhfbepid) or [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/branchpanda/).
 
 ## Contributing
 
-Issues and pull requests are welcome. Keep changes focused, run `pnpm build:chrome` before opening a PR (it type-checks the whole project), and describe the browser you tested on.
+Issues and pull requests are welcome. Keep changes focused, run `pnpm build:chrome` before opening a pull request, and specify which browser you tested.
 
 ## Author
 
